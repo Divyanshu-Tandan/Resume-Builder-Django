@@ -3,6 +3,7 @@ body {
     font-family: 'Helvetica', 'Arial', sans-serif;
     background-color: #f4f4f9;
     color: #333;
+    font-size: 16px; /* Increased base font size */
 }
 
 /* Container for content */
@@ -21,6 +22,7 @@ h2 {
     border-bottom: 2px solid #3498db;
     padding-bottom: 10px;
     margin-bottom: 20px;
+    font-weight: bold; /* Enhanced boldness */
 }
 
 /* Form Styling */
@@ -31,12 +33,14 @@ form {
 .form-control {
     border-radius: 5px;
     margin-bottom: 15px;
+    font-size: 16px; /* Match base font size */
 }
 
 .btn-primary {
     background-color: #3498db;
     border-color: #3498db;
     transition: background-color 0.3s;
+    font-size: 16px; /* Match base font size */
 }
 
 .btn-primary:hover {
@@ -47,6 +51,7 @@ form {
 .btn-danger {
     background-color: #e74c3c;
     border-color: #e74c3c;
+    font-size: 16px; /* Match base font size */
 }
 
 .btn-danger:hover {
@@ -57,6 +62,7 @@ form {
 .btn-secondary {
     background-color: #7f8c8d;
     border-color: #7f8c8d;
+    font-size: 16px; /* Match base font size */
 }
 
 .btn-secondary:hover {
@@ -73,6 +79,7 @@ ul {
 ul li {
     padding: 10px 0;
     border-bottom: 1px solid #eee;
+    font-size: 16px; /* Match base font size */
 }
 
 ul li:last-child {
@@ -83,6 +90,7 @@ ul li a {
     text-decoration: none;
     color: #3498db;
     margin-right: 10px;
+    font-weight: bold; /* Enhanced boldness */
 }
 
 ul li a:hover {
@@ -95,17 +103,21 @@ ul li a:hover {
     background-color: #f9f9f9;
     border-radius: 5px;
     margin-bottom: 20px;
+    font-size: 16px; /* Match base font size */
 }
 
 .resume-details h3 {
     color: #2c3e50;
     margin-top: 20px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 2px solid #ddd; /* Thicker border for boldness */
     padding-bottom: 5px;
+    font-weight: bold; /* Enhanced boldness */
+    font-size: 18px; /* Increased size for headers */
 }
 
 .resume-details p {
-    margin: 10px 0;
+    margin: 5px 0;
+    font-weight: 500; /* Slightly bolder text */
 }
 
 /* Button Group */
@@ -117,25 +129,31 @@ ul li a:hover {
 .alert {
     margin-bottom: 20px;
     border-radius: 5px;
+    font-size: 16px; /* Match base font size */
 }
 
 /* Preview Styling */
 .resume-preview {
     border: 1px solid #ddd;
-    padding: 0.5in;
+    padding: 0.25in; /* Reduced from 0.5in */
     background-color: #fff;
-    height: 80vh;
-    overflow-y: auto;
+    min-height: 200px; /* Minimum height to ensure visibility */
+    overflow: hidden; /* Prevent any scrollbars */
+    word-wrap: break-word; /* Ensure text wraps */
+    font-size: 16px; /* Match base font size */
 }
 
 .resume-preview h3 {
-    font-weight: bold;
+    font-weight: bold; /* Enhanced boldness */
     color: #2c3e50;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 2px solid #ddd; /* Thicker border for boldness */
     padding-bottom: 5px;
+    font-size: 18px; /* Increased size for headers */
 }
 
 .resume-preview pre {
     margin: 0;
-    white-space: pre-wrap; /* Allow wrapping within pre */
+    white-space: pre-wrap; /* Preserve newlines and allow wrapping */
+    word-break: break-word; /* Break long words if necessary */
+    font-weight: 500; /* Slightly bolder text */
 }

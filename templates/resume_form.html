@@ -18,21 +18,21 @@
             <!-- Preview Column -->
             <div class="col-md-6">
                 <h2>Preview</h2>
-                <div class="resume-preview" style="border: 1px solid #ddd; padding: 0.5in; background-color: #fff; height: 80vh; overflow-y: auto;">
-                    <h3 style="font-weight: bold; color: #2c3e50; border-bottom: 1px solid #ddd; padding-bottom: 5px;" id="preview-title">{{ form.title.value|default:"Untitled Resume" }}</h3>
+                <div class="resume-preview">
+                    <h3 id="preview-title">{{ form.title.value|default:"Untitled Resume" }}</h3>
                     <p><strong>Full Name:</strong> <span id="preview-full-name">{{ form.full_name.value|default:"Not provided" }}</span></p>
                     <p><strong>Email:</strong> <span id="preview-email">{{ form.email.value|default:"Not provided" }}</span></p>
                     <p><strong>Phone:</strong> <span id="preview-phone">{{ form.phone.value|default:"Not provided" }}</span></p>
                     <p><strong>Address:</strong> <pre id="preview-address">{{ form.address.value|default:"Not provided" }}</pre></p>
-                    <h3 style="font-weight: bold; color: #2c3e50; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Personal Information:</h3>
+                    <h3>Personal Information:</h3>
                     <p><pre id="preview-personal-info">{{ form.personal_info.value|default:"No personal info provided" }}</pre></p>
-                    <h3 style="font-weight: bold; color: #2c3e50; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Summary:</h3>
+                    <h3>Summary:</h3>
                     <p><pre id="preview-summary">{{ form.summary.value|default:"No summary provided" }}</pre></p>
-                    <h3 style="font-weight: bold; color: #2c3e50; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Education:</h3>
+                    <h3>Education:</h3>
                     <p><pre id="preview-education">{{ form.education.value|default:"No education provided" }}</pre></p>
-                    <h3 style="font-weight: bold; color: #2c3e50; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Experience:</h3>
+                    <h3>Experience:</h3>
                     <p><pre id="preview-experience">{{ form.experience.value|default:"No experience provided" }}</pre></p>
-                    <h3 style="font-weight: bold; color: #2c3e50; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Skills:</h3>
+                    <h3>Skills:</h3>
                     <p><pre id="preview-skills">{{ form.skills.value|default:"No skills provided" }}</pre></p>
                 </div>
             </div>

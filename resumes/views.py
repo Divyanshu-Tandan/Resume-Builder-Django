@@ -3,17 +3,17 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .forms import ResumeForm
 from .models import Resume
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.lib.colors import HexColor
-from reportlab.lib.utils import simpleSplit
-from io import BytesIO
+import pdfkit
 import logging
-import re
+import os
 
 # Set up logging
 logger = logging.getLogger(__name__)
+
+# Configure wkhtmltopdf path (adjust based on your installation)
+WKHTMLTOPDF_PATH = "C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe"  # Windows example
+# For Linux/macOS, use something like: "/usr/local/bin/wkhtmltopdf"
+pdfkit_config = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_PATH)
 
 @login_required
 def create_resume(request):
@@ -44,105 +44,77 @@ def generate_resume_pdf(request, pk):
         resume = get_object_or_404(Resume, pk=pk, user=request.user)
         logger.debug(f"Generating PDF for resume ID: {resume.id}, Full Name: {resume.full_name}")
 
-        buffer = BytesIO()
-        p = canvas.Canvas(buffer, pagesize=letter)
-        width, height = letter
-        left_margin = 0.5 * inch
-        right_margin = width - 0.5 * inch
-        top_margin = height - 0.5 * inch
-        bottom_margin = 0.5 * inch
-        y = top_margin
-        max_width = right_margin - left_margin - 0.2 * inch  # Account for indent
+        # HTML content mirroring the preview with updated styling
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{
+                    font-family: 'Helvetica', 'Arial', sans-serif;
+                    color: #333;
+                    padding: 0.25in; /* Reduced from 0.5in */
+                    font-size: 16px; /* Increased base font size */
+                }}
+                h3 {{
+                    font-weight: bold; /* Enhanced boldness */
+                    color: #2c3e50;
+                    border-bottom: 2px solid #ddd; /* Thicker border for boldness */
+                    padding-bottom: 5px;
+                    font-size: 18px; /* Increased size for headers */
+                }}
+                p {{
+                    margin: 5px 0;
+                    font-weight: 500; /* Slightly bolder text */
+                }}
+                pre {{
+                    margin: 0;
+                    white-space: pre-wrap; /* Preserve newlines and allow wrapping */
+                    word-break: break-word; /* Break long words if necessary */
+                    font-weight: 500; /* Slightly bolder text */
+                }}
+            </style>
+        </head>
+        <body>
+            <h3>{resume.title or 'Untitled Resume'}</h3>
+            <p><strong>Full Name:</strong> {resume.full_name or 'Not provided'}</p>
+            <p><strong>Email:</strong> {resume.email or 'Not provided'}</p>
+            <p><strong>Phone:</strong> {resume.phone or 'Not provided'}</p>
+            <p><strong>Address:</strong> <pre>{resume.address or 'Not provided'}</pre></p>
+            <h3>Personal Information:</h3>
+            <p><pre>{resume.personal_info or 'No personal info provided'}</pre></p>
+            <h3>Summary:</h3>
+            <p><pre>{resume.summary or 'No summary provided'}</pre></p>
+            <h3>Education:</h3>
+            <p><pre>{resume.education or 'No education provided'}</pre></p>
+            <h3>Experience:</h3>
+            <p><pre>{resume.experience or 'No experience provided'}</pre></p>
+            <h3>Skills:</h3>
+            <p><pre>{resume.skills or 'No skills provided'}</pre></p>
+        </body>
+        </html>
+        """
 
-        # Function to add text with wrapping and dynamic page breaks
-        def add_text(text, font, size, x, initial_y, section_title=None):
-            nonlocal y, p
-            p.setFont(font, size)
-            text = re.sub(r'[•\s]+', ' ', text or "").strip()
-            lines = text.split('\n')
-            available_height = initial_y - bottom_margin
-            line_height = 0.25 * inch
+        # Configure pdfkit options
+        options = {
+            'margin-top': '0.25in',  # Reduced from 0.5in
+            'margin-right': '0.25in',  # Reduced from 0.5in
+            'margin-bottom': '0.25in',  # Reduced from 0.5in
+            'margin-left': '0.25in',  # Reduced from 0.5in
+            'encoding': "UTF-8",
+            'no-outline': None
+        }
 
-            if section_title:
-                p.setFont("Helvetica-Bold", size)  # Make section titles bold
-                p.setFillColor(HexColor("#2c3e50"))
-                p.drawString(x, y, section_title)
-                p.setFont("Helvetica", size)  # Reset to regular for content
-                y -= 0.3 * inch
-                available_height -= 0.3 * inch
+        # Generate PDF with configured path
+        pdf = pdfkit.from_string(html_content, False, options=options, configuration=pdfkit_config)
 
-            p.setFillColor(HexColor("#333333"))
-            for line in lines:
-                if line.strip():
-                    wrapped_lines = simpleSplit(line, "Helvetica", size, max_width)
-                    for wrapped_line in wrapped_lines:
-                        if y <= bottom_margin:
-                            p.showPage()
-                            y = top_margin
-                            if section_title:
-                                p.setFont("Helvetica-Bold", size)
-                                p.setFillColor(HexColor("#2c3e50"))
-                                p.drawString(x, y, section_title)
-                                p.setFont("Helvetica", size)
-                                y -= 0.3 * inch
-                        p.drawString(x + 0.2 * inch, y, wrapped_line)
-                        y -= line_height
-            y -= 0.2 * inch
-
-        # Add Title
-        p.setFont("Helvetica-Bold", 16)
-        p.setFillColor(HexColor("#2c3e50"))
-        p.drawString(left_margin, y, resume.title or "Untitled Resume")
-        y -= 0.5 * inch
-
-        # Add Full Name
-        p.setFont("Helvetica-Bold", 14)
-        full_name = resume.full_name if resume.full_name else "Name Not Provided"
-        p.drawString(left_margin, y, full_name)
-        y -= 0.3 * inch
-
-        # Add Contact Info
-        p.setFont("Helvetica", 10)
-        if resume.email:
-            p.drawString(left_margin, y, f"Email: {resume.email}")
-            y -= 0.2 * inch
-        if resume.phone:
-            p.drawString(left_margin, y, f"Phone: {resume.phone}")
-            y -= 0.2 * inch
-        if resume.address:
-            p.drawString(left_margin, y, "Address:")
-            y -= 0.2 * inch
-            add_text(str(resume.address), "Helvetica", 10, left_margin, y)
-
-        # Add Personal Info
-        add_text(resume.personal_info or "No personal info provided", "Helvetica", 10, left_margin, y, "Personal Information:")
-
-        # Add Summary
-        add_text(resume.summary or "No summary provided", "Helvetica", 10, left_margin, y, "Summary:")  # New Summary field
-
-        # Add Education
-        add_text(resume.education or "No education provided", "Helvetica", 10, left_margin, y, "Education:")
-
-        # Add Experience
-        add_text(resume.experience or "No experience provided", "Helvetica", 10, left_margin, y, "Experience:")
-
-        # Add Skills
-        add_text(resume.skills or "No skills provided", "Helvetica", 10, left_margin, y, "Skills:")
-
-        p.showPage()
-        p.save()
-        buffer.seek(0)
-        pdf = buffer.getvalue()
-        buffer.close()
-
-        response = HttpResponse(content_type='application/pdf')
+        response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="resume_{resume.id}.pdf"'
-        response.write(pdf)
         return response
 
     except Exception as e:
         logger.error(f"Error generating PDF for resume ID {pk}: {str(e)}")
-        return HttpResponse("Error generating PDF. Please try again later.", status=500)
+        return HttpResponse("Error generating PDF. Please try again later. Ensure wkhtmltopdf is installed and the path is correct.", status=500)
 
 @login_required
 def delete_resume(request, pk):
