@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Welcome, {{ user.username }}!</h2>
+    <h3>Your Resumes</h3>
+    {% if resumes %}
+        <ul>
+        {% for resume in resumes %}
+            <li>{{ resume.title }} - Created on {{ resume.created_at }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No resumes yet. <a href="{% url 'create_resume' %}">Create one now!</a></p>
+    {% endif %}
+{% endblock %}

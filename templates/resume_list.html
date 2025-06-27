@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>My Resumes</h2>
+    {% if resumes %}
+        <ul>
+        {% for resume in resumes %}
+            <li>
+                <a href="{% url 'resume_detail' resume.pk %}">{{ resume.title }}</a>
+                <a href="{% url 'generate_resume_pdf' resume.pk %}" class="btn btn-primary btn-sm">Download PDF</a>
+                <a href="{% url 'delete_resume' resume.pk %}" class="btn btn-danger btn-sm">Delete</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No resumes found. <a href="{% url 'create_resume' %}">Create one now!</a></p>
+    {% endif %}
+    <a href="{% url 'create_resume' %}" class="btn btn-success">Create New Resume</a>
+{% endblock %}
