@@ -1,7 +1,159 @@
+/* General Styling */
 body {
-    background-color: #f8f9fa;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color:  #1a1919;
+    font-size: 16px; /* Increased base font size */
 }
+
+/* Container for content */
+.container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Headings */
+h2 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-weight: bold; /* Enhanced boldness */
+}
+
+/* Form Styling */
 form {
-    max-width: 600px;
-    margin: auto;
+    margin-bottom: 20px;
+}
+
+.form-control {
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 16px; /* Match base font size */
+}
+
+.btn-primary {
+    background-color: #3498db;
+    border-color: #3498db;
+    transition: background-color 0.3s;
+    font-size: 16px; /* Match base font size */
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+    font-size: 16px; /* Match base font size */
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+    border-color: #c0392b;
+}
+
+.btn-secondary {
+    background-color: #7f8c8d;
+    border-color: #7f8c8d;
+    font-size: 16px; /* Match base font size */
+}
+
+.btn-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* Resume List */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 16px; /* Match base font size */
+}
+
+ul li:last-child {
+    border-bottom: none;
+}
+
+ul li a {
+    text-decoration: none;
+    color: #3498db;
+    margin-right: 10px;
+    font-weight: bold; /* Enhanced boldness */
+}
+
+ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Resume Details */
+.resume-details {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 16px; /* Match base font size */
+}
+
+.resume-details h3 {
+    color: #2c3e50;
+    margin-top: 20px;
+    border-bottom: 2px solid #ddd; /* Thicker border for boldness */
+    padding-bottom: 5px;
+    font-weight: bold; /* Enhanced boldness */
+    font-size: 18px; /* Increased size for headers */
+}
+
+.resume-details p {
+    margin: 5px 0;
+    font-weight: 500; /* Slightly bolder text */
+}
+
+/* Button Group */
+.mt-3 {
+    margin-top: 1rem;
+}
+
+/* Error and Success Messages */
+.alert {
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 16px; /* Match base font size */
+}
+
+/* Preview Styling */
+.resume-preview {
+    border: 1px solid #ddd;
+    padding: 0.25in; /* Reduced from 0.5in */
+    background-color: #fff;
+    min-height: 200px; /* Minimum height to ensure visibility */
+    overflow: hidden; /* Prevent any scrollbars */
+    word-wrap: break-word; /* Ensure text wraps */
+    font-size: 16px; /* Match base font size */
+}
+
+.resume-preview h3 {
+    font-weight: bold; /* Enhanced boldness */
+    color: #2c3e50;
+    border-bottom: 2px solid #ddd; /* Thicker border for boldness */
+    padding-bottom: 5px;
+    font-size: 18px; /* Increased size for headers */
+}
+
+.resume-preview pre {
+    margin: 0;
+    white-space: pre-wrap; /* Preserve newlines and allow wrapping */
+    word-break: break-word; /* Break long words if necessary */
+    font-weight: 500; /* Slightly bolder text */
 }

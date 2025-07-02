@@ -3,73 +3,76 @@
 {% block title %}Create Resume{% endblock %}
 
 {% block content %}
-    <div class="container">
+    <h2>Create Resume</h2>
+    <form method="post" id="resumeForm">
+        {% csrf_token %}
+        <input type="hidden" name="section_order" id="section_order">
         <div class="row">
-            <!-- Form Column -->
             <div class="col-md-6">
-                <h2>Create Resume</h2>
-                <form method="post" id="resumeForm">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-primary">Save Resume</button>
-                    <a href="{% url 'resume_list' %}" class="btn btn-secondary">Cancel</a>
-                </form>
+                {{ form.title.label_tag }} {{ form.title }}
+                {{ form.full_name.label_tag }} {{ form.full_name }}
+                {{ form.email.label_tag }} {{ form.email }}
+                {{ form.phone.label_tag }} {{ form.phone }}
+                {{ form.address.label_tag }} {{ form.address }}
+                {{ form.personal_info.label_tag }} {{ form.personal_info }}
+                {{ form.summary.label_tag }} {{ form.summary }}
+                {{ form.education.label_tag }} {{ form.education }}
+                {{ form.experience.label_tag }} {{ form.experience }}
+                {{ form.skills.label_tag }} {{ form.skills }}
+                {{ form.certificates.label_tag }} {{ form.certificates }} <!-- Ensure this is present -->
+                {{ form.projects.label_tag }} {{ form.projects }}
             </div>
-            <!-- Preview Column -->
             <div class="col-md-6">
-                <h2>Preview</h2>
-                <div class="resume-preview">
-                    <h3 id="preview-title">{{ form.title.value|default:"Untitled Resume" }}</h3>
-                    <p><strong>Full Name:</strong> <span id="preview-full-name">{{ form.full_name.value|default:"Not provided" }}</span></p>
-                    <p><strong>Email:</strong> <span id="preview-email">{{ form.email.value|default:"Not provided" }}</span></p>
-                    <p><strong>Phone:</strong> <span id="preview-phone">{{ form.phone.value|default:"Not provided" }}</span></p>
-                    <p><strong>Address:</strong> <pre id="preview-address">{{ form.address.value|default:"Not provided" }}</pre></p>
-                    <h3>Personal Information:</h3>
-                    <p><pre id="preview-personal-info">{{ form.personal_info.value|default:"No personal info provided" }}</pre></p>
-                    <h3>Summary:</h3>
-                    <p><pre id="preview-summary">{{ form.summary.value|default:"No summary provided" }}</pre></p>
-                    <h3>Education:</h3>
-                    <p><pre id="preview-education">{{ form.education.value|default:"No education provided" }}</pre></p>
-                    <h3>Experience:</h3>
-                    <p><pre id="preview-experience">{{ form.experience.value|default:"No experience provided" }}</pre></p>
-                    <h3>Skills:</h3>
-                    <p><pre id="preview-skills">{{ form.skills.value|default:"No skills provided" }}</pre></p>
+                <div class="resume-preview" id="preview">
+                    <h3>Resume Preview</h3>
+                    <div id="preview-content"></div>
                 </div>
             </div>
         </div>
-    </div>
+        <button type="submit" class="btn btn-primary mt-3">Save Resume</button>
+    </form>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('resumeForm');
-            const previewElements = {
-                'title': document.getElementById('preview-title'),
-                'full_name': document.getElementById('preview-full-name'),
-                'email': document.getElementById('preview-email'),
-                'phone': document.getElementById('preview-phone'),
-                'address': document.getElementById('preview-address'),
-                'personal_info': document.getElementById('preview-personal-info'),
-                'summary': document.getElementById('preview-summary'),
-                'education': document.getElementById('preview-education'),
-                'experience': document.getElementById('preview-experience'),
-                'skills': document.getElementById('preview-skills')
-            };
+            const preview = document.getElementById('preview-content');
+            const sectionOrderInput = document.getElementById('section_order');
+            const fullNameInput = document.getElementById('id_full_name');
 
-            form.querySelectorAll('input, textarea').forEach(input => {
-                input.addEventListener('input', function() {
-                    const fieldName = this.name;
-                    const previewElement = previewElements[fieldName] || previewElements[fieldName.replace('-', '_')];
-                    if (previewElement) {
-                        if (fieldName === 'title') {
-                            previewElement.textContent = this.value || 'Untitled Resume';
-                        } else if (fieldName === 'address' || fieldName === 'personal_info' || fieldName === 'summary' || 
-                                   fieldName === 'education' || fieldName === 'experience' || fieldName === 'skills') {
-                            previewElement.textContent = this.value || (fieldName === 'skills' ? 'No skills provided' : 'No ' + fieldName.replace('_', ' ') + ' provided');
-                        } else {
-                            previewElement.textContent = this.value || 'Not provided';
-                        }
+            let sectionOrder = {{ form.section_order.value|default:'["title", "full_name", "email", "phone", "address", "summary", "education", "experience", "skills"]'|safe }};
+            console.log('Initial sectionOrder:', sectionOrder);
+
+            form.addEventListener('input', function(e) {
+                updatePreview();
+            });
+
+            function updatePreview() {
+                let previewHtml = '';
+                sectionOrder.forEach(section => {
+                    let value = '';
+                    if (section === 'full_name' && fullNameInput) {
+                        value = fullNameInput.value || 'Not found';
+                        previewHtml += `<h4>Full Name:</h4><p>${value}</p>`;
+                    } else if (form[section] && form[section].value) {
+                        let displayName = section.charAt(0).toUpperCase() + section.slice(1).replace('_', ' ');
+                        value = form[section].value;
+                        previewHtml += `<h4>${displayName}:</h4><p><pre>${value}</pre></p>`;
                     }
                 });
+                preview.innerHTML = previewHtml;
+                sectionOrderInput.value = JSON.stringify(sectionOrder);
+                console.log('Updated preview HTML:', previewHtml);
+            }
+
+            updatePreview();
+
+            new Sortable(document.getElementById('section-list'), {
+                animation: 150,
+                onEnd: function(evt) {
+                    sectionOrder = Array.from(document.querySelectorAll('#section-list .list-group-item'))
+                        .map(item => item.dataset.section);
+                    updatePreview();
+                }
             });
         });
     </script>
