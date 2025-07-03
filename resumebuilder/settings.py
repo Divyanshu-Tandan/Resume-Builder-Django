@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+
+load_dotenv()
+SECRET_KEY = os.environ.get('SECRET_KEY', '($py!mq04nb&ag+*#nky%t5_ss0wip_7#!__9ska5q=vrm8#i@')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,9 +34,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Add this line
 SECRET_KEY = 'django-insecure-=!ntecf2x9)b=lbuuu=o+0j74z03@l7w(2nwtf+%)-i^xidpco'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app', '.now.sh']
+# ALLOWED_HOSTS = ['.vercel.app', '.now.sh']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
