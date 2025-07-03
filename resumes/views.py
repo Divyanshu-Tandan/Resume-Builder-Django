@@ -34,6 +34,20 @@ def create_resume(request):
     return render(request, 'resume_form.html', {'form': form})
 
 @login_required
+def edit_resume(request, pk):
+    resume = get_object_or_404(Resume, pk=pk, user=request.user)
+    if request.method == 'POST':
+        form = ResumeForm(request.POST, instance=resume)
+        if form.is_valid():
+            form.save()
+            return redirect('resume_detail', pk=pk)
+    else:
+        form = ResumeForm(instance=resume)
+        if 'section_order' in form.fields:
+            form.fields['section_order'].initial = json.loads(resume.section_order) if resume.section_order else ["title", "full_name", "email", "phone", "address", "summary", "education", "experience", "skills"]
+    return render(request, 'resume_form.html', {'form': form})
+
+@login_required
 def resume_list(request):
     resumes = Resume.objects.filter(user=request.user)
     return render(request, 'resume_list.html', {'resumes': resumes})
@@ -87,7 +101,7 @@ def generate_resume_pdf(request, pk):
                     margin: 0;
                     white-space: pre-wrap;
                     word-break: break-word;
-                    font-weight: 500;
+                    font-weight: 700;
                     background-color: #f1f1f1;
                     padding: 4pt;
                     border-radius: 2pt;
