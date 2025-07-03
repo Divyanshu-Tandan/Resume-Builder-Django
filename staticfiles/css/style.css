@@ -2,7 +2,7 @@
 body {
     font-family: 'Helvetica', 'Arial', sans-serif;
     background-color: #f4f4f9;
-    color:  #1a1919;
+    color: #333;
     font-size: 16px; /* Increased base font size */
 }
 
@@ -117,7 +117,7 @@ ul li a:hover {
 
 .resume-details p {
     margin: 5px 0;
-    font-weight: 700; /* Slightly bolder text */
+    font-weight: 500; /* Slightly bolder text */
 }
 
 /* Button Group */
@@ -155,5 +155,5 @@ ul li a:hover {
     margin: 0;
     white-space: pre-wrap; /* Preserve newlines and allow wrapping */
     word-break: break-word; /* Break long words if necessary */
-    font-weight: 700; /* Slightly bolder text */
+    font-weight: 500; /* Slightly bolder text */
 }
