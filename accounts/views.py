@@ -32,6 +32,9 @@ def user_logout(request):
     logout(request)
     return redirect('login')
 
+from resumes.models import Resume
+
 @login_required
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    resumes = Resume.objects.filter(user=request.user)
+    return render(request, 'dashboard.html', {'resumes': resumes})

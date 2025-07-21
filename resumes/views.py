@@ -83,6 +83,8 @@ def generate_resume_pdf(request, pk):
                     margin: 0 auto;
                 }}
                 .resume-title {{
+                    font-size: 20pt;
+                    text-align: center;
                     text-transform: uppercase;
                     font-weight: 700;
                 }}
@@ -124,7 +126,7 @@ def generate_resume_pdf(request, pk):
         """
         for section in section_order:
             if section == 'title':
-                html_content += f"<h3 class='resume-title'>{resume.title or 'Untitled Resume'}</h3>"
+                html_content += f"<h1 class='resume-title'>{resume.title or 'Untitled Resume'}</h1>"
             elif section == 'full_name':
                 html_content += f"<p><strong>Full Name:</strong> {resume.full_name or 'Not provided'}</p>"
             elif section == 'email':
